@@ -19,7 +19,7 @@ type School ={
 const SchoolsPage = () => {
   const [schools, setSchools] = useState<School[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [expandedCards, setExpandedCards] = useState(new Set());
   const [copiedField, setCopiedField] = useState<number|string|null>(null);
 
@@ -36,8 +36,12 @@ const SchoolsPage = () => {
       const data = await response.json();
       setSchools(data);
       console.log(data)
-    } catch (err:any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('An unknown error occurred');
+      }
     } finally {
       setLoading(false);
     }

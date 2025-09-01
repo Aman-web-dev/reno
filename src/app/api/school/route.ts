@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { db } from "@/lib/db";
 
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const [schools] = await db.execute('SELECT * FROM `schools`');
     return new Response(JSON.stringify(schools), {

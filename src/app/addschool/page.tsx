@@ -2,9 +2,9 @@
 
 import React, { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "../../lib/firebase";
-
+import Image from "next/image";
 export type Inputs = {
   id?: number;
   name: string;
@@ -19,11 +19,10 @@ export type Inputs = {
 function AddSchoolPage() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [selectedImage,setSelectedImage]=useState<any>()
+  const [selectedImage,setSelectedImage]=useState<File>()
   const {
     register,
     handleSubmit,
-    watch,
     reset,
     formState: { errors },
   } = useForm<Inputs>();
@@ -35,7 +34,7 @@ function AddSchoolPage() {
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result as string);
-        setSelectedImage(e.target.files?.[0]|| null)
+        setSelectedImage(e.target.files?.[0])
       };
       reader.readAsDataURL(file);
     }
@@ -261,9 +260,11 @@ function AddSchoolPage() {
                 <label htmlFor="image" className="cursor-pointer">
                   {imagePreview ? (
                     <div className="space-y-4">
-                      <img 
+                      <Image
                         src={imagePreview} 
                         alt="School preview" 
+                        height={220}
+                        width={220}
                         className="max-h-48 mx-auto rounded-lg shadow-md"
                       />
                       <p className="text-sm text-gray-600">Click to change image</p>
